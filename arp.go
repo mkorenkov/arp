@@ -26,7 +26,7 @@ func newArpItem(iface string, mac string, ip string) *Value {
 	return &Value{Iface: iface, MacAddr: mac, IPAddr: ip}
 }
 
-// List returns list of rows from ARP cache
+// List list of rows from ARP cache
 func List() (table []Value) {
 	f, err := os.Open("/proc/net/arp")
 
@@ -46,4 +46,14 @@ func List() (table []Value) {
 	}
 
 	return table
+}
+
+// IPLookup find IP address by MAC addr.
+func IPLookup(mac string) string {
+	for _, item := range List() {
+		if item.MacAddr == mac {
+			return item.IPAddr
+		}
+	}
+	return ""
 }
